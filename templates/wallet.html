@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block addcss %}
+<link rel="stylesheet" href="../static/home.css">
+{% endblock addcss %}
+{% block title %}Wallet{% endblock title %}
+{% block body %}
+
+<div class="container-wallet">
+    <div class="balance">
+      <div class="balance-info">
+      <h4> Wallet Balance</h4>
+      <span> ₹ {{customer.walletbalance}} </span>
+      </div>
+      <div class="wallet-buttons">
+      <a href="/deposit"> <button class="btn btn-success" >Deposit</button></a>
+      <a href="/widthdraw"> <button class="btn btn-success" >Withdraw </button></a>
+      </div>
+    </div>
+    <div class="balance">
+      <div class="balance-info">
+      <h4> Bonus</h4>
+      <span> ₹ 100 </span>
+      </div>
+      <div class="wallet-buttons">
+      <a href="/deposit"> <button class="btn btn-success" >Use Bonus</button></a>
+      
+      </div>
+    </div>
+
+    <div class="wallet-buttons">
+
+        <a href="/transcitions"> <button class="btn btn-success" >Transcitions</button></a>
+      <a href="/support"> <button class="btn btn-success" >Support</button></a>
+    </div>
+</div>
+{% endblock body %}

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock title %}
+{% block addcss %}
+<link rel="stylesheet" href="./static/home.css">
+{% endblock addcss %}
+{% block body %}
+<div class="containergame">
+<div class="containerleft">
+ <h3> Upcoming Games </h3>
+
+    <div class="upcoming-game">
+    
+        <div class="game-info">
+        <h4> Game- 2 </h4>
+        <span> Time to Start : 4:00:00</span>
+        <span> Minimum amount : ₹20 </span>
+        </div >
+
+        <div class="playbutton">
+                <a href="/play/"> <button class="btn btn-success" >Play Now </button></a>
+        </div>
+    </div> 
+
+    <div class="upcoming-game">
+    
+        <div class="game-info">
+        <h4> Game- 3 </h4>
+        <span> Time to Start : 8:00:00</span>
+        <span> Minimum amount : ₹50 </span>
+        </div >
+
+        <div class="playbutton">
+                <a href="/play/"> <button class="btn btn-success" >Play Now </button></a>
+        </div>
+    </div> 
+
+
+    <div class="upcoming-game">
+    
+        <div class="game-info">
+        <h4> Game- 3 </h4>
+        <span> Time to Start : 8:00:00</span>
+        <span> Minimum amount : ₹50 </span>
+        </div >
+
+        <div class="playbutton">
+                <a href="/play/"> <button class="btn btn-success" >Play Now </button></a>
+        </div>
+    </div> 
+
+    <div class="upcoming-game">
+    
+        <div class="game-info">
+        <h4> Game- 3 </h4>
+        <span> Time to Start : 8:00:00</span>
+        <span> Minimum amount : ₹50 </span>
+        </div >
+
+        <div class="playbutton">
+                <a href="/play/"> <button class="btn btn-success" >Play Now </button></a>
+        </div>
+    </div> 
+</div>
+<div class="containerright">
+    <h1>Game - 1</h1>
+
+    <h2> Remaining Time : 5:00:00 </h2>
+
+    <div class="containeramount"></div>
+    {% comment %}  red and green button  {% endcomment %}
+
+
+    <div class="game-cards">
+    <div class="card-red"></div>
+    <div class="card-green"></div>
+    </div>
+
+    </div>
+  
+
+</div>
+{% endblock body %}

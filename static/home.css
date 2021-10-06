@@ -1,0 +1,129 @@
+.containergame{
+    display : flex;
+    flex-direction: row;
+    margin : 0 !important;
+    width : 100%;
+    height : 95vh;
+    overflow-y: scroll;
+}
+
+@media screen and (max-width: 575px) {
+    .containergame {
+      flex-direction: column-reverse;
+      
+    }
+    
+    .game-cards div{
+        margin : 10px ;
+        width : 100px;
+        height : 100px;
+    }
+
+    .container-wallet{
+        width : 90% !important;
+        left : 20px !important;
+    }
+    .wallet-buttons{
+        flex-direction: column;
+    }
+    .wallet-buttons button {
+
+        margin : 10px 0 !important; ;
+    }
+    
+  }
+.containerleft {
+
+    flex : 30%;
+    display : flex;
+    align-items : center;
+    flex-direction : column;
+    background-color : lightgoldenrodyellow;
+}
+.containerright{
+    display : flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    flex : 70%;
+    background-color: aliceblue;
+}
+
+.game-cards{
+
+    display : flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-red{
+
+    width : 200px;
+    height : 200px;
+    margin : 0 20px;
+    background-color : red;
+    border-radius:  10px;
+}
+.card-green{
+
+    width : 200px;
+    height : 200px;
+    background-color : green;
+    border-radius:  10px;
+    margin : 0 20px;
+}
+
+.upcoming-game{
+    height: 100px;
+    width : 100%;
+    background-color : lightcoral;
+    color : white;
+    display : flex;
+    flex-direction: row;
+    justify-content : space-around;
+    align-items : center;
+    margin : 10px 0;
+
+}
+
+.game-info{
+    display : flex;
+    flex-direction : column;
+}
+
+/*  wallets css */
+
+.container-wallet{
+    display : flex;
+    flex-direction : column;
+    border: 1px solid black;
+    width : 60%;
+    left : 20%;
+    top : 20%;
+    position: absolute;
+   
+    background-color :aliceblue;
+    box-shadow: 10px;
+}
+
+.balance{
+    display : flex;
+    justify-content: space-between;
+    margin: 20px;
+    background-color : white;
+    border-radius:  10px;
+    padding :10px;
+    
+
+}
+
+.wallet-buttons{
+    display:flex;
+    align-items : center;
+    justify-content: center;
+}
+
+.wallet-buttons button {
+
+    margin : 0 10px;
+}
