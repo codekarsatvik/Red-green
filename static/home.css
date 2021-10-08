@@ -127,3 +127,19 @@
 
     margin : 0 10px;
 }
+
+.add-balance-input{
+    display:flex;
+    flex-direction: row;
+    padding: 10px;
+
+}
+#add-balance-amount,#widthraw-balance-amount{
+
+    outline : none;
+    width : 300px;
+}
+.add-balance-input button {
+    border-radius : 20px;
+    margin : 0 10px;
+}

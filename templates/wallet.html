@@ -2,6 +2,7 @@
 {% block addcss %}
 <link rel="stylesheet" href="../static/home.css">
 {% endblock addcss %}
+
 {% block title %}Wallet{% endblock title %}
 {% block body %}
 
@@ -12,8 +13,34 @@
       <span> ₹ {{customer.walletbalance}} </span>
       </div>
       <div class="wallet-buttons">
-      <a href="/deposit"> <button class="btn btn-success" >Deposit</button></a>
-      <a href="/widthdraw"> <button class="btn btn-success" >Withdraw </button></a>
+      <button class="btn btn-success" onclick= "showinput('deposit')">Deposit</button>
+      <button class="btn btn-success" onclick= "showinput('widthraw')">Withdraw </button>
+      </div>
+    </div>
+    <div class="balance deposit" style="display: none">
+      <div class="add-balance-input">
+
+        <input type="number" id="add-balance-amount" placeholder="Enter Amount to Add" value=0  >
+        <button class="btn btn-primary" onclick="addamount(50)"> +50</button>
+        <button class="btn btn-primary" onclick="addamount(100)"> +100</button>
+        <button class="btn btn-primary" onclick="addamount(200)"> +200</button>
+      </div>
+      <div class="wallet-buttons">
+      <a href="/addamount"> <button class="btn btn-success" >Add Balance</button></a>
+      
+      </div>
+    </div>
+    <div class="balance widthraw" style="display: none">
+      <div class="add-balance-input">
+
+        <input type="number" id="widthraw-balance-amount"  value=0  >
+        <button class="btn btn-primary" onclick="widthrawamount(25,{{customer.walletbalance}})"> 25%</button>
+        <button class="btn btn-primary" onclick="widthrawamount(50,{{customer.walletbalance}})"> 50%</button>
+        <button class="btn btn-primary" onclick="widthrawamount(100,{{customer.walletbalance}})"> 100%</button>
+      </div>
+      <div class="wallet-buttons">
+      <a href="/addamount"> <button class="btn btn-success" >Add Balance</button></a>
+      
       </div>
     </div>
     <div class="balance">
@@ -34,3 +61,30 @@
     </div>
 </div>
 {% endblock body %}
+
+{% block script %}
+<script>
+     function addamount(amount) {
+       var value = $('#add-balance-amount').val();
+       $('#add-balance-amount').val(parseInt(value) + parseInt(amount)) ;
+       console.log(amount,value);
+
+     }
+     function widthrawamount(amountper,walletbal) {
+       
+       $('#widthraw-balance-amount').val((parseInt(amountper)*parseInt(walletbal))/100);
+       console.log(amountper);
+
+     }
+     function showinput(type) {
+       if(type == 'deposit'){
+       $('.deposit').css("display", "flex");}
+
+       if(type == 'widthraw'){
+       $('.widthraw').css("display", "flex");}
+
+       
+
+     }
+</script>     
+{% endblock script %}
