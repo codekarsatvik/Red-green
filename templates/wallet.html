@@ -7,6 +7,10 @@
 {% block body %}
 
 <div class="container-wallet">
+ {% if messages %}
+   {% for message in messages %}
+   <p {% if message.tags %} class="alert alert-{{message.tags}} mb-5"{% endif %}>{{message}}</p>
+   {% endfor %}{% endif %}
     <div class="balance">
       <div class="balance-info">
       <h4> Wallet Balance</h4>
@@ -19,16 +23,27 @@
     </div>
     <div class="balance deposit" style="display: none">
       <div class="add-balance-input">
-
-        <input type="number" id="add-balance-amount" placeholder="Enter Amount to Add" value=0  >
-        <button class="btn btn-primary" onclick="addamount(50)"> +50</button>
-        <button class="btn btn-primary" onclick="addamount(100)"> +100</button>
-        <button class="btn btn-primary" onclick="addamount(200)"> +200</button>
+          <button class="btn btn-primary" onclick="add_amount(50)"> +50</button>
+        <button class="btn btn-primary" onclick="add_amount(100)"> +100</button>
+        <button class="btn btn-primary" onclick="add_amount(200)"> +200</button>
       </div>
-      <div class="wallet-buttons">
-      <a href="/addamount"> <button class="btn btn-success" >Add Balance</button></a>
+    
+        <form   method="POST" action='/addamount/' >
+        {% csrf_token %}
+          <div class="add-form">
+        <input type="number" id="add-balance-amount" placeholder="Enter Amount to Add" name='add' value=0  >
+        
+          <div class="wallet-buttons">
+             <button class="btn btn-success" type="submit">Add Balance</button>
+             {% comment %} <a href="/addamount"></a> {% endcomment %}
+          
+        </div>
+         </div> 
+        </form>
       
-      </div>
+
+        
+      
     </div>
     <div class="balance widthraw" style="display: none">
       <div class="add-balance-input">
@@ -39,8 +54,8 @@
         <button class="btn btn-primary" onclick="widthrawamount(100,{{customer.walletbalance}})"> 100%</button>
       </div>
       <div class="wallet-buttons">
-      <a href="/addamount"> <button class="btn btn-success" >Add Balance</button></a>
-      
+       <button class="btn btn-success" type='submit'>Widthraw  Balance</button>
+      {% comment %} <a href="/addamount"></a> {% endcomment %}
       </div>
     </div>
     <div class="balance">
@@ -64,10 +79,10 @@
 
 {% block script %}
 <script>
-     function addamount(amount) {
+     function add_amount(amount) {
        var value = $('#add-balance-amount').val();
        $('#add-balance-amount').val(parseInt(value) + parseInt(amount)) ;
-       console.log(amount,value);
+       console.log(type(amount),value);
 
      }
      function widthrawamount(amountper,walletbal) {
@@ -87,4 +102,7 @@
 
      }
 </script>     
+
+
+{% comment %} {% endblock payment-gateway %} {% endcomment %}
 {% endblock script %}

@@ -129,3 +129,6 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL='/wallet'
 LOGOUT_REDIRECT_URL='/accounts/login/'
+
+RAZORPAY_API_KEY='rzp_test_Kkdle5kEEV51Jj'
+RAZORPAY_API_SECRET_KEY='xhRhgMgHwr0M699bCYoQZFy0'

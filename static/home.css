@@ -116,7 +116,10 @@
     
 
 }
-
+.add-form{
+    display : flex;
+    flex-direction: row;
+}
 .wallet-buttons{
     display:flex;
     align-items : center;
