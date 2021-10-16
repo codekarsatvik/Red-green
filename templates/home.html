@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Home{% endblock title %}
+{% block title %}{{title}}{% endblock title %}
 {% block addcss %}
 <link rel="stylesheet" href="./static/home.css">
 {% endblock addcss %}
@@ -8,7 +8,7 @@
 <div class="containergame">
 <div class="containerleft">
  <h3> Upcoming Games </h3>
-
+   
     <div class="upcoming-game">
     
         <div class="game-info">
@@ -62,22 +62,55 @@
         </div>
     </div> 
 </div>
-<div class="containerright">
+<div class="containermiddle">
     <h1>Game - 1</h1>
-
+     
     <h2> Remaining Time : 5:00:00 </h2>
-
-    <div class="containeramount"></div>
+    <h2>{{user.username}}</h2>
+    
     {% comment %}  red and green button  {% endcomment %}
 
 
-    <div class="game-cards">
-    <div class="card-red"></div>
-    <div class="card-green"></div>
+    <div class="game-cards" >
+    <div class="card-red bidpopup" onclick= showBidBox(this)  id="red"></div>
+    <div class="card-green bidpopup" onclick= showBidBox(this)  id="green"></div>
     </div>
 
     </div>
   
 
+<div class="containerright">
+<div style="display : none" class="container-amount">
+<form id="gameform" method ="POST" class="form-inline" action="/submitgame/">
+  {% csrf_token %}
+  <div class="form-group mx-sm-3 mb-2">
+    <label for="inputPassword2" class="sr-only">Bid Amount</label>
+    <input type="text" class="form-control" value=0 name="amount" placeholder="Enter Bid Amount">
+  </div>
+  <input type="hidden" name="color" value="red" id="hiddencolorInput">
+  <button  class="btn btn-primary mb-2">Confirm Bid</button>
+</form>
 </div>
+</div>
+</div>
+
+
 {% endblock body %}
+
+{% block script %}
+
+<script>
+    function showBidBox(e) {
+            // do something
+            
+            document.getElementsByClassName('container-amount')[0].style.display = 'block';
+            document.getElementById('hiddencolorInput').value = e.id;
+        };
+
+   
+  setTimeout(function(){ 
+      $('#gameform').submit();
+   }, 10000);
+    
+</script>
+{% endblock script %}

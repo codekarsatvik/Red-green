@@ -17,6 +17,8 @@ urlpatterns = [
     path('logout/',auth_views.LogoutView.as_view(),name='logout'),
     path('addamount/',views.Addamount,name='addamount'),
     path('paymentdone/', views.payment_done, name="paymentdone"),
+    # path('savetransiction/',views.savetransiction,name="savetransiction"),
+    path('submitgame/',views.submitgame,name="gamesubmit")
     
 
 ]

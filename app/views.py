@@ -14,8 +14,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
-from .models import Customer
+from .models import Customer,CurrentGame
 import razorpay
+from django.db.models import Sum
 client = razorpay.Client(auth=("rzp_test_Kkdle5kEEV51Jj", "xhRhgMgHwr0M699bCYoQZFy0"))
 
 # Create your views here.
@@ -127,3 +128,47 @@ def payment_done(request):
     print(amount,customer)
     messages.success(request,'Your payment was successful ,Wallet Balnce Updated')
     return  redirect('/wallet')
+
+def savetransiction(request,data):
+    print(data)
+    pass 
+
+def submitgame(request):
+    color = request.POST.get('color')
+    amount = request.POST.get('amount')
+    customer=Customer.objects.filter(user=request.user).first()
+    if int(amount) > customer.walletbalance :
+        messages.success(request,'Your Bid amount is more than your wallet balance')
+        return render('/')
+    if amount != "0" :
+        
+        print(amount, color)
+       
+        game = CurrentGame(user =request.user, color = color, amount = amount)
+        game.save()
+
+        # winning logic
+        
+
+        amountred = CurrentGame.objects.filter(color = "red").aggregate(Sum('amount'))
+        amountgreen = CurrentGame.objects.filter(color = "green").aggregate(Sum('amount'))
+        
+        if(amountred['amount__sum'] > amountgreen['amount__sum']):
+            winners = CurrentGame.objects.filter(color = "green")
+            for winner in winners:
+                customer=Customer.objects.filter(user=winner.user).first()
+                print(customer)
+                Customer(id =  customer.id,user= winner.user,walletbalance = winner.amount*(1.8) + customer.walletbalance).save()
+        else :
+            winners = CurrentGame.objects.filter(color = "red")
+            for winner in winners:
+                customer=Customer.objects.filter(user= winner.user).first()
+                print(customer)
+                Customer(id =  customer.id,user= winner.user,walletbalance = winner.amount*(1.8) + customer.walletbalance).save()
+            
+
+        
+        return  redirect('/')
+
+
+    return redirect('/')

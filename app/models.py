@@ -11,3 +11,15 @@ class Customer(models.Model):
     
     def __str__(self):
         return str(self.id)
+
+class CurrentGame(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    color = models.CharField(max_length=10)
+    amount = models.IntegerField()
+
+    def __str__(self):
+        return str(self.id)     
+
+class Games(models.Model):
+    starttime = models.DateTimeField()
+               

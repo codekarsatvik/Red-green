@@ -32,21 +32,30 @@
     }
     
   }
-.containerleft {
+  .containerleft {
 
-    flex : 30%;
+    flex : 20%;
     display : flex;
     align-items : center;
     flex-direction : column;
     background-color : lightgoldenrodyellow;
 }
-.containerright{
+.containermiddle{
     display : flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    flex : 70%;
+    flex : 60%;
     background-color: aliceblue;
+}
+
+.containerright{
+    display : flex;
+    flex-direction: column;
+    /* justify-content: space-around; */
+    /* align-items: center; */
+    flex : 20%;
+    background-color: lightgoldenrodyellow;
 }
 
 .game-cards{
