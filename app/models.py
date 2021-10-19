@@ -22,4 +22,16 @@ class CurrentGame(models.Model):
 
 class Games(models.Model):
     starttime = models.DateTimeField()
-               
+    def __str__(self):
+        return str(self.id)           
+
+
+
+class Gameplayed(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    gameid = models.IntegerField()
+    amount = models.IntegerField()
+    pandl = models.IntegerField(default=0)
+    status = models.CharField(max_length=10,default = 'loose')
+    def __str__(self):
+        return str(self.id)           

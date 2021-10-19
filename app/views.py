@@ -14,7 +14,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
-from .models import Customer,CurrentGame
+from .models import Customer,CurrentGame,Games,Gameplayed
 import razorpay
 from django.db.models import Sum
 client = razorpay.Client(auth=("rzp_test_Kkdle5kEEV51Jj", "xhRhgMgHwr0M699bCYoQZFy0"))
@@ -24,7 +24,8 @@ client = razorpay.Client(auth=("rzp_test_Kkdle5kEEV51Jj", "xhRhgMgHwr0M699bCYoQZ
 def home(request):
     if request.user.is_authenticated:
         customer=Customer.objects.filter(user=request.user).first()
-        return render(request, 'home.html',{'customer':customer})
+        games = Games.objects.all()
+        return render(request, 'home.html',{'customer':customer,'games' :games})
        
     return render(request, 'home.html')
 
@@ -129,46 +130,76 @@ def payment_done(request):
     messages.success(request,'Your payment was successful ,Wallet Balnce Updated')
     return  redirect('/wallet')
 
-def savetransiction(request,data):
-    print(data)
-    pass 
+
 
 def submitgame(request):
     color = request.POST.get('color')
     amount = request.POST.get('amount')
+    gameid = request.POST.get('gameid')
     customer=Customer.objects.filter(user=request.user).first()
     if int(amount) > customer.walletbalance :
-        messages.success(request,'Your Bid amount is more than your wallet balance')
-        return render('/')
+        messages.warning(request,'Your Bid amount is more than your wallet balance,place another bid of lower amount')
+        return redirect('/')
     if amount != "0" :
         
-        print(amount, color)
+        
        
         game = CurrentGame(user =request.user, color = color, amount = amount)
         game.save()
+        customer = Customer.objects.filter(user=request.user).first()
+        customer.walletbalance = customer.walletbalance - int(amount)
+        customer.save()
+         
+        #  Gameplayed
+        Gameplayed(user=request.user, amount = amount,gameid = gameid).save()
+        messages.success(request,'Your Bid amount is placed,You will get your result soon')
+        return redirect('/')
 
-        # winning logic
-        
 
-        amountred = CurrentGame.objects.filter(color = "red").aggregate(Sum('amount'))
-        amountgreen = CurrentGame.objects.filter(color = "green").aggregate(Sum('amount'))
-        
-        if(amountred['amount__sum'] > amountgreen['amount__sum']):
-            winners = CurrentGame.objects.filter(color = "green")
-            for winner in winners:
-                customer=Customer.objects.filter(user=winner.user).first()
-                print(customer)
-                Customer(id =  customer.id,user= winner.user,walletbalance = winner.amount*(1.8) + customer.walletbalance).save()
-        else :
-            winners = CurrentGame.objects.filter(color = "red")
-            for winner in winners:
-                customer=Customer.objects.filter(user= winner.user).first()
-                print(customer)
-                Customer(id =  customer.id,user= winner.user,walletbalance = winner.amount*(1.8) + customer.walletbalance).save()
-            
-
-        
-        return  redirect('/')
 
 
     return redirect('/')
+
+
+def winnerlogic(request):
+    # winning logic
+        
+
+        amountred = 0
+        amtred = CurrentGame.objects.filter(color = "red").aggregate(Sum('amount'))
+        if amtred['amount__sum'] != None:
+            amountred = amtred['amount__sum']
+
+        amountgreen = 0
+        amtgreen = CurrentGame.objects.filter(color = "green").aggregate(Sum('amount'))
+        if amtgreen['amount__sum'] != None:
+            amountgreen = amtgreen['amount__sum']
+        
+        isWinner = False
+
+        # 
+        if(amountred > amountgreen):
+            winners = CurrentGame.objects.filter(color = "green")
+            for winner in winners:
+                if(winner.user == request.user):
+                    isWinner = True
+                customer=Customer.objects.filter(user=winner.user).first()
+                # 
+                
+                print(customer)
+                Customer(id =  customer.id,user= winner.user,walletbalance = winner.amount*(1.8) + customer.walletbalance).save()
+
+        else :
+            winners = CurrentGame.objects.filter(color = "red")
+            for winner in winners:
+                if(winner.user == request.user):
+                    isWinner = True
+                customer=Customer.objects.filter(user= winner.user).first()
+                print(customer)
+                
+                Customer(id =  customer.id,user= winner.user,walletbalance = winner.amount*(1.8) + customer.walletbalance).save()
+            
+
+        print(isWinner)
+        CurrentGame.objects.all().delete()
+        return  JsonResponse({'isWinner' : isWinner },safe= False)

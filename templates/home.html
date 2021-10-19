@@ -8,12 +8,12 @@
 <div class="containergame">
 <div class="containerleft">
  <h3> Upcoming Games </h3>
-   
+    {% for game in games %}
     <div class="upcoming-game">
     
         <div class="game-info">
-        <h4> Game- 2 </h4>
-        <span> Time to Start : 4:00:00</span>
+        <h4> Game-{{game.id}} </h4>
+        <span> Time to Start : </span>
         <span> Minimum amount : ₹20 </span>
         </div >
 
@@ -21,56 +21,17 @@
                 <a href="/play/"> <button class="btn btn-success" >Play Now </button></a>
         </div>
     </div> 
-
-    <div class="upcoming-game">
+    {% endfor %}
     
-        <div class="game-info">
-        <h4> Game- 3 </h4>
-        <span> Time to Start : 8:00:00</span>
-        <span> Minimum amount : ₹50 </span>
-        </div >
-
-        <div class="playbutton">
-                <a href="/play/"> <button class="btn btn-success" >Play Now </button></a>
-        </div>
-    </div> 
-
-
-    <div class="upcoming-game">
-    
-        <div class="game-info">
-        <h4> Game- 3 </h4>
-        <span> Time to Start : 8:00:00</span>
-        <span> Minimum amount : ₹50 </span>
-        </div >
-
-        <div class="playbutton">
-                <a href="/play/"> <button class="btn btn-success" >Play Now </button></a>
-        </div>
-    </div> 
-
-    <div class="upcoming-game">
-    
-        <div class="game-info">
-        <h4> Game- 3 </h4>
-        <span> Time to Start : 8:00:00</span>
-        <span> Minimum amount : ₹50 </span>
-        </div >
-
-        <div class="playbutton">
-                <a href="/play/"> <button class="btn btn-success" >Play Now </button></a>
-        </div>
-    </div> 
 </div>
 <div class="containermiddle">
     <h1>Game - 1</h1>
      
     <h2> Remaining Time : 5:00:00 </h2>
-    <h2>{{user.username}}</h2>
-    
+
     {% comment %}  red and green button  {% endcomment %}
 
-
+    <h2 id="result"></h2>
     <div class="game-cards" >
     <div class="card-red bidpopup" onclick= showBidBox(this)  id="red"></div>
     <div class="card-green bidpopup" onclick= showBidBox(this)  id="green"></div>
@@ -80,13 +41,19 @@
   
 
 <div class="containerright">
+{% if messages %}
+   {% for message in messages %}
+   <p {% if message.tags %} class="alert alert-{{message.tags}} mb-5"{% endif %}>{{message}}</p>
+   {% endfor %}{% endif %}
 <div style="display : none" class="container-amount">
+
 <form id="gameform" method ="POST" class="form-inline" action="/submitgame/">
   {% csrf_token %}
   <div class="form-group mx-sm-3 mb-2">
     <label for="inputPassword2" class="sr-only">Bid Amount</label>
     <input type="text" class="form-control" value=0 name="amount" placeholder="Enter Bid Amount">
   </div>
+  <input type="hidden" name="gameid" value="1" id="hiddengameidInput">
   <input type="hidden" name="color" value="red" id="hiddencolorInput">
   <button  class="btn btn-primary mb-2">Confirm Bid</button>
 </form>
@@ -105,12 +72,34 @@
             
             document.getElementsByClassName('container-amount')[0].style.display = 'block';
             document.getElementById('hiddencolorInput').value = e.id;
+            {% comment %}  document.getElementById('hiddengameidInput').value = game.id; {% endcomment %}
         };
 
    
-  setTimeout(function(){ 
-      $('#gameform').submit();
-   }, 10000);
+
+   var today = new Date();
+   var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+   
+   {% comment %} if currentime == game[0].starttime
+    Remaining-time = game[0].starttime + 3 - currentime ;
+
+    if remainingtime == 0 {
+      
+      
+    }
+    {% endcomment %}
+   console.log(time)
+   setTimeout(function(){ 
+
+      $('#gameform').submit(function(){
+        $.ajax({url: "/getresult/", success: function(result){
+      
+      $("#result").html(result.isWinner);
+      }});
+      });
+      
+      
+   }, 20000);
     
 </script>
 {% endblock script %}

@@ -18,7 +18,9 @@ urlpatterns = [
     path('addamount/',views.Addamount,name='addamount'),
     path('paymentdone/', views.payment_done, name="paymentdone"),
     # path('savetransiction/',views.savetransiction,name="savetransiction"),
-    path('submitgame/',views.submitgame,name="gamesubmit")
+    path('submitgame/',views.submitgame,name="gamesubmit"),
+    path('getresult/',views.winnerlogic,name="gamesubmit"),
+
     
 
 ]
