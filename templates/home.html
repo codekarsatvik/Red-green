@@ -37,7 +37,7 @@
 </div>
 <div class="containermiddle">
     <h1>Game - {{currentgame.id}}</h1>
-     <span> Each game if of 3:00:00 Minutes , you cannot place a bid after 3 minutes,Bids After 3 minutes will not be considered for Winnings </span>
+     <span > Each game is of 3:00:00 Minutes ,No Bids after that</span>
     <h2> <span id="time"></span> <span id="demo"></span> </h2>
 
     {% comment %}  red and green button  {% endcomment %}
@@ -111,24 +111,8 @@
     var result = parseInt(timeleft / 60) + ':' + timeleft % 60; 
     document.getElementById('demo').innerHTML = result;
     console.log(timeleft);
-     if (timeleft == 120) {
-      
-      console.log("into")
-      document.getElementById('time').innerHTML = "Next Game In :";
-      $('.game-cards').css('display', 'none');
-
-      // slight update to account for browsers not supporting e.which
-
-// To disable f5
-    /* jQuery < 1.7 */
-$(document).bind("keydown", disableF5);
-/* OR jQuery >= 1.7 */
-$(document).on("keydown", disableF5);
-
-
-      {% comment %} $('#gameform').submit(); {% endcomment %}
-      
-      $.ajax({url: "/getresult/{{currentgame.id}}", success: function(result){
+    if(timeleft == 120){
+        $.ajax({url: "/getresult/{{currentgame.id}}", success: function(result){
         console.log(result.isWinner)
       
         document.getElementById('result').innerHTML = result.isWinner;
@@ -136,6 +120,20 @@ $(document).on("keydown", disableF5);
         
       
       }});
+    }
+     if (timeleft <= 120) {
+      
+      
+      document.getElementById('time').innerHTML = "Next Game In :";
+      $('.game-cards').css('display', 'none');
+
+      // slight update to account for browsers not supporting e.which
+
+
+
+     
+      
+      
       
       
    
