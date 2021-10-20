@@ -21,7 +21,7 @@ class CurrentGame(models.Model):
         return str(self.id)     
 
 class Games(models.Model):
-    starttime = models.DateTimeField()
+    starttime = models.TimeField()
     def __str__(self):
         return str(self.id)           
 

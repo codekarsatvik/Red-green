@@ -1,6 +1,8 @@
 # from django.shortcuts import render
 from os import O_RDWR
 import django
+import datetime
+
 from redgreen.settings import RAZORPAY_API_KEY
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
@@ -23,9 +25,15 @@ client = razorpay.Client(auth=("rzp_test_Kkdle5kEEV51Jj", "xhRhgMgHwr0M699bCYoQZ
 
 def home(request):
     if request.user.is_authenticated:
+       
+        
         customer=Customer.objects.filter(user=request.user).first()
         games = Games.objects.all()
-        return render(request, 'home.html',{'customer':customer,'games' :games})
+        currentgame = Games.objects.first()
+        print(currentgame.starttime)
+
+        
+        return render(request, 'home.html',{'customer':customer,'games' :games,'currentgame' :currentgame})
        
     return render(request, 'home.html')
 
@@ -161,7 +169,7 @@ def submitgame(request):
     return redirect('/')
 
 
-def winnerlogic(request):
+def winnerlogic(request,gameid):
     # winning logic
         
 
@@ -200,6 +208,9 @@ def winnerlogic(request):
                 Customer(id =  customer.id,user= winner.user,walletbalance = winner.amount*(1.8) + customer.walletbalance).save()
             
 
-        print(isWinner)
+        print(isWinner,gameid)
         CurrentGame.objects.all().delete()
+        Games.objects.get(id = gameid).delete()
+        
+        Games(starttime = datetime.datetime.now() + datetime.timedelta(minutes = 5) ).save()
         return  JsonResponse({'isWinner' : isWinner },safe= False)

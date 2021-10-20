@@ -25,13 +25,13 @@
     
 </div>
 <div class="containermiddle">
-    <h1>Game - 1</h1>
+    <h1>Game - {{currentgame.id}}</h1>
      
-    <h2> Remaining Time : 5:00:00 </h2>
+    <h2> <span id="time"></span> <span id="demo"></span> </h2>
 
     {% comment %}  red and green button  {% endcomment %}
 
-    <h2 id="result"></h2>
+    <h2 ><span id="result"></span></h2>
     <div class="game-cards" >
     <div class="card-red bidpopup" onclick= showBidBox(this)  id="red"></div>
     <div class="card-green bidpopup" onclick= showBidBox(this)  id="green"></div>
@@ -53,7 +53,7 @@
     <label for="inputPassword2" class="sr-only">Bid Amount</label>
     <input type="text" class="form-control" value=0 name="amount" placeholder="Enter Bid Amount">
   </div>
-  <input type="hidden" name="gameid" value="1" id="hiddengameidInput">
+  <input type="hidden" name="gameid" value="{{currentgame.id}}" id="hiddengameidInput">
   <input type="hidden" name="color" value="red" id="hiddencolorInput">
   <button  class="btn btn-primary mb-2">Confirm Bid</button>
 </form>
@@ -76,10 +76,53 @@
         };
 
    
-
-   var today = new Date();
-   var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  {% comment %} var currentdate = new Date();
+  var currtime = currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+  console.log(currtime,'{{currentgame.starttime}}')
+  if (currtime == '{{currentgame.starttime}}' ){
+    console.log("yes")
+  }else{
+    console.log("no")
+  }
+    {% endcomment %}
+  document.getElementById('time').innerHTML = "Remaining Time :";
+  var x=setInterval(function () {
+    
+    console.log('{{currentgame.starttime}}')
+    var today = new Date();
+    var seconds = today.getMinutes()*60 + today.getSeconds();
+    var threemin = 60;
+    var timeleft = threemin - seconds % threemin; 
+    
+    var result = parseInt(timeleft / 60) + ':' + timeleft % 60; 
+    document.getElementById('demo').innerHTML = result;
+    console.log(timeleft);
+     if (timeleft == 30) {
+      
+      console.log("into")
+      document.getElementById('time').innerHTML = "Next Game In :";
+      {% comment %} $('#gameform').submit(); {% endcomment %}
+      
+      $.ajax({url: "/getresult/{{currentgame.id}}", success: function(result){
+        console.log(result.isWinner)
+      if(result.isWinner == true){
+        document.getElementById('result').innerHTML = "You Won";
+      }else{
+         document.getElementById('result').innerHTML = "You Loose";
+      }
+      
+      }});
+      
+      
    
+     }
+
+     if(timeleft == 1){
+       location.reload();
+     }
+  }, 1000);
    {% comment %} if currentime == game[0].starttime
     Remaining-time = game[0].starttime + 3 - currentime ;
 
@@ -88,8 +131,8 @@
       
     }
     {% endcomment %}
-   console.log(time)
-   setTimeout(function(){ 
+  
+   {% comment %} setTimeout(function(){ 
 
       $('#gameform').submit(function(){
         $.ajax({url: "/getresult/", success: function(result){
@@ -99,7 +142,7 @@
       });
       
       
-   }, 20000);
+   }, 20000); {% endcomment %}
     
 </script>
 {% endblock script %}
