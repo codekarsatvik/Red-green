@@ -212,7 +212,7 @@ def winnerlogic(request,gameid):
         return  JsonResponse({'isWinner' : isWinner },safe= False)
 
 def mygames(request):
-    mygames = Gameplayed.objects.filter(user = request.user)
+    mygames = reversed(Gameplayed.objects.filter(user = request.user))
     return render(request,'mygames.html',{'mygames':mygames})
 
 
