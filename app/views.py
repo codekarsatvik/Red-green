@@ -30,8 +30,9 @@ def home(request):
         customer=Customer.objects.filter(user=request.user).first()
         games = Games.objects.all()
         currentgame = Games.objects.first()
-        print(currentgame.starttime)
-
+        # print(currentgame.starttime,datetime.timedelta(minutes = 5,seconds = 0))
+        if Games.objects.count() == 1 :
+            Games(starttime = datetime.datetime.now() + datetime.timedelta(minutes = 5) ).save()
         
         return render(request, 'home.html',{'customer':customer,'games' :games,'currentgame' :currentgame})
        
@@ -183,34 +184,41 @@ def winnerlogic(request,gameid):
         if amtgreen['amount__sum'] != None:
             amountgreen = amtgreen['amount__sum']
         
-        isWinner = False
+        isWinner = "Not Played"
 
         # 
+        if CurrentGame.objects.filter(user = request.user).count() >0 :
+            isWinner = "You Loose"
         if(amountred > amountgreen):
             winners = CurrentGame.objects.filter(color = "green")
-            for winner in winners:
-                if(winner.user == request.user):
-                    isWinner = True
-                customer=Customer.objects.filter(user=winner.user).first()
-                # 
-                
-                print(customer)
-                Customer(id =  customer.id,user= winner.user,walletbalance = winner.amount*(1.8) + customer.walletbalance).save()
+            
 
         else :
             winners = CurrentGame.objects.filter(color = "red")
-            for winner in winners:
+        for winner in winners:
                 if(winner.user == request.user):
-                    isWinner = True
-                customer=Customer.objects.filter(user= winner.user).first()
+                    isWinner = "You Won"
+                customer=Customer.objects.filter(user=winner.user).first()
+                # 
+                gameplayed = Gameplayed.objects.filter(user=request.user).filter(gameid = gameid).first()
+                gameplayed.status = "Won"
+                gameplayed.pandl = (0.8)*winner.amount
+                gameplayed.save()
                 print(customer)
-                
-                Customer(id =  customer.id,user= winner.user,walletbalance = winner.amount*(1.8) + customer.walletbalance).save()
-            
+                Customer(id =  customer.id,user= winner.user,walletbalance = winner.amount*(1.8) + customer.walletbalance).save()   
 
-        print(isWinner,gameid)
+        
+       
+        return  JsonResponse({'isWinner' : isWinner },safe= False)
+
+def mygames(request):
+    mygames = Gameplayed.objects.filter(user = request.user)
+    return render(request,'mygames.html',{'mygames':mygames})
+
+
+def creategame(request,gameid):
         CurrentGame.objects.all().delete()
         Games.objects.get(id = gameid).delete()
-        
+        # currentgame = Games.objects.first()
         Games(starttime = datetime.datetime.now() + datetime.timedelta(minutes = 5) ).save()
-        return  JsonResponse({'isWinner' : isWinner },safe= False)
+        return redirect('/')

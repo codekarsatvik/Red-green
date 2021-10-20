@@ -48,7 +48,10 @@
     flex : 60%;
     background-color: aliceblue;
 }
-
+.mygames{
+    overflow-y: scroll;
+    height : 70vh !important;;
+}
 .containerright{
     display : flex;
     flex-direction: column;

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block addcss %}
+<link rel="stylesheet" href="../static/home.css">
+{% endblock addcss %}
+
+{% block title %}My Games{% endblock title %}
+{% block body %}
+
+<div class="container-wallet mygames">
+    {% for game in mygames %}
+    <div class="balance">
+      <div class="balance-info">
+      <h4> Game -{{game.gameid}}</h4>
+      <span> Amount Used : {{game.amount}} </span>
+      <span> Status : {{game.status}} </span>
+      </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock body %}
+
+
+
+
+
+{% comment %} {% block payment-gateway %} {% endcomment %}

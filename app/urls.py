@@ -20,6 +20,8 @@ urlpatterns = [
     # path('savetransiction/',views.savetransiction,name="savetransiction"),
     path('submitgame/',views.submitgame,name="gamesubmit"),
     path('getresult/<int:gameid>',views.winnerlogic,name="gamesubmit"),
+    path('mygames/',views.mygames,name="mygames"),
+    path('creategame/<int:gameid>',views.creategame,name="creategame"),
 
     
 

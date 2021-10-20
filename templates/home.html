@@ -7,30 +7,41 @@
 {% block body %}
 <div class="containergame">
 <div class="containerleft">
- <h3> Upcoming Games </h3>
+<h3> Current Game </h3>
+<div class="upcoming-game">
+    <div class="game-info">
+        <h4> Game-{{currentgame.id}} </h4>
+        {% comment %} <span> Game started at  : {{currentgame.starttime}}</span> {% endcomment %}
+       
+        </div >
+    </div>
+ <h3> Upcoming Game </h3>
+ 
     {% for game in games %}
+    {% if game != currentgame %}
     <div class="upcoming-game">
     
         <div class="game-info">
         <h4> Game-{{game.id}} </h4>
-        <span> Time to Start : </span>
-        <span> Minimum amount : ₹20 </span>
+        {% comment %} <span> Game starts at  : {{game.starttime}}</span> {% endcomment %}
+        <span> Minimum amount : ₹10 </span>
         </div >
 
-        <div class="playbutton">
+        {% comment %} <div class="playbutton">
                 <a href="/play/"> <button class="btn btn-success" >Play Now </button></a>
-        </div>
+        </div> {% endcomment %}
     </div> 
+    {% endif %}
     {% endfor %}
     
 </div>
 <div class="containermiddle">
     <h1>Game - {{currentgame.id}}</h1>
-     
+     <span> Each game if of 3:00:00 Minutes , you cannot place a bid after 3 minutes,Bids After 3 minutes will not be considered for Winnings </span>
     <h2> <span id="time"></span> <span id="demo"></span> </h2>
 
     {% comment %}  red and green button  {% endcomment %}
-
+    
     <h2 ><span id="result"></span></h2>
     <div class="game-cards" >
     <div class="card-red bidpopup" onclick= showBidBox(this)  id="red"></div>
@@ -87,31 +98,42 @@
     console.log("no")
   }
     {% endcomment %}
+    function disableF5(e) { if ((e.which || e.keyCode) == 116) e.preventDefault(); };
   document.getElementById('time').innerHTML = "Remaining Time :";
   var x=setInterval(function () {
     
     console.log('{{currentgame.starttime}}')
     var today = new Date();
     var seconds = today.getMinutes()*60 + today.getSeconds();
-    var threemin = 60;
+    var threemin = 60*5;
     var timeleft = threemin - seconds % threemin; 
     
     var result = parseInt(timeleft / 60) + ':' + timeleft % 60; 
     document.getElementById('demo').innerHTML = result;
     console.log(timeleft);
-     if (timeleft == 30) {
+     if (timeleft == 120) {
       
       console.log("into")
       document.getElementById('time').innerHTML = "Next Game In :";
+      $('.game-cards').css('display', 'none');
+
+      // slight update to account for browsers not supporting e.which
+
+// To disable f5
+    /* jQuery < 1.7 */
+$(document).bind("keydown", disableF5);
+/* OR jQuery >= 1.7 */
+$(document).on("keydown", disableF5);
+
+
       {% comment %} $('#gameform').submit(); {% endcomment %}
       
       $.ajax({url: "/getresult/{{currentgame.id}}", success: function(result){
         console.log(result.isWinner)
-      if(result.isWinner == true){
-        document.getElementById('result').innerHTML = "You Won";
-      }else{
-         document.getElementById('result').innerHTML = "You Loose";
-      }
+      
+        document.getElementById('result').innerHTML = result.isWinner;
+      
+        
       
       }});
       
@@ -120,7 +142,19 @@
      }
 
      if(timeleft == 1){
-       location.reload();
+       // To re-enable f5
+    /* jQuery < 1.7 */
+      $(document).unbind("keydown", disableF5);
+/* OR jQuery >= 1.7 */
+        $(document).off("keydown", disableF5);
+        $.ajax({url: "/creategame/{{currentgame.id}}", success: function(result){
+        
+      
+        location.reload();
+      
+        }});
+       
+
      }
   }, 1000);
    {% comment %} if currentime == game[0].starttime
